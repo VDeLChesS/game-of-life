@@ -1,11 +1,13 @@
+// App.js
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import { FaPlay, FaPause, FaSearchPlus, FaSearchMinus, FaInfoCircle, FaShapes, FaRedo } from 'react-icons/fa'; // Import FaRedo for reset icon
-import ReactModal from 'react-modal';
+import Grid from './components/Grid';
+import Controls from './components/Controls/Controls';
+import PatternModal from './components/PatternModal';
 import RecordRTC from 'recordrtc';
 
-const numRows = 50;
-const numCols = 50;
+const numRows = 80;
+const numCols = 80;
 
 const generateEmptyGrid = () => {
   const rows = [];
@@ -56,13 +58,12 @@ const App = () => {
     return () => clearInterval(interval);
   }, [running, runGame]);
 
-  const zoomIn = () => setCellSize(size => Math.min(size + 5, 50));
+  const zoomIn = () => setCellSize(size => Math.min(size + 5, 60));
   const zoomOut = () => setCellSize(size => Math.max(size - 5, 10));
 
-  // Reset function
   const resetGrid = () => {
-    setGrid(generateEmptyGrid()); // Reset grid to an empty state
-    setRunning(false);            // Stop the simulation if running
+    setGrid(generateEmptyGrid());
+    setRunning(false);
   };
 
   const commonPatterns = () => {
@@ -85,7 +86,7 @@ const App = () => {
     const canvas = document.getElementById('gameCanvas');
     const stream = canvas.captureStream();
     const recorder = new RecordRTC(stream, { type: 'video' });
-    
+
     recorder.startRecording();
     setTimeout(() => {
       recorder.stopRecording(() => {
@@ -102,72 +103,22 @@ const App = () => {
   return (
     <div className="App">
       <h1>Conway's Game of Life</h1>
-      <button onClick={() => setRunning(!running)}>
-        {running ? <FaPause /> : <FaPlay />}
-      </button>
-      <button onClick={zoomIn}>
-        <FaSearchPlus />
-      </button>
-      <button onClick={zoomOut}>
-        <FaSearchMinus />
-      </button>
-      <button onClick={resetGrid}>
-        <FaRedo /> Reset
-      </button>
-      <button onClick={commonPatterns}>
-        <FaShapes /> Patterns
-      </button>
-      <button onClick={() => setModalIsOpen(true)}>
-        <FaInfoCircle /> Info
-      </button>
-      <ReactModal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Game Info"
-        ariaHideApp={false}
-      >
-        <h2>Conway's Game of Life</h2>
-        <p>Rules of the Game:</p>
-        <ul>
-          <li>Any live cell with fewer than two live neighbors dies.</li>
-          <li>Any live cell with two or three live neighbors survives.</li>
-          <li>Any live cell with more than three live neighbors dies.</li>
-          <li>Any dead cell with exactly three live neighbors becomes a live cell.</li>
-        </ul>
-        <p>For more details, check these YouTube videos:</p>
-        <ul>
-          <li><a href="https://youtu.be/HeQX2HjkcNo" target="_blank" rel="noopener noreferrer">Conway's Game of Life - Computerphile</a></li>
-          <li><a href="https://youtu.be/DvlyzDZDEq4" target="_blank" rel="noopener noreferrer">John Conway - Life without death</a></li>
-        </ul>
-        <button onClick={() => setModalIsOpen(false)}>Close</button>
-      </ReactModal>
-      <button onClick={saveVideo}>Save Video</button>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${numCols}, ${cellSize}px)`
-      }}>
-        {grid.map((rows, i) =>
-          rows.map((col, j) => (
-            <div
-              key={`${i}-${j}`}
-              onClick={() => {
-                const newGrid = [...grid];
-                newGrid[i][j] = grid[i][j] ? 0 : 1;
-                setGrid(newGrid);
-              }}
-              style={{
-                width: cellSize,
-                height: cellSize,
-                backgroundColor: grid[i][j] ? 'black' : undefined,
-                border: 'solid 1px lightgray'
-              }}
-            />
-          ))
-        )}
-      </div>
+      <Controls
+        running={running}
+        setRunning={setRunning}
+        zoomIn={zoomIn}
+        zoomOut={zoomOut}
+        resetGrid={resetGrid}
+        commonPatterns={commonPatterns}
+        openInfoModal={() => setModalIsOpen(true)}
+        saveVideo={saveVideo}
+      />
+      <Grid grid={grid} setGrid={setGrid} cellSize={cellSize} numCols={numCols} />
+      <PatternModal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)} />
       <canvas id="gameCanvas" style={{ display: 'none' }} />
     </div>
   );
 };
 
 export default App;
+
