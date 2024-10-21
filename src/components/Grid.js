@@ -17,7 +17,7 @@ const Grid = ({ grid, setGrid, cellSize, numCols }) => {
               width: cellSize,
               height: cellSize,
               backgroundColor: grid[i][j] ? 'black' : undefined,
-              border: 'solid 1px lightgray'
+              border: 'solid 1.2px white'
             }}
           />
         ))

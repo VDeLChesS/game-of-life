@@ -2,7 +2,7 @@
 
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f0f0f0;
+  background-color: #75ce838a;
   margin: 0;
   padding: 0;
   display: flex;
@@ -65,4 +65,54 @@ canvas {
   display: none;
 }
 
+.speed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 300px;
+  border-radius: 8px;
+}
+
+.modal-content {
+  text-align: center;
+}
+
+.modal ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modal ul li {
+  margin: 10px 0;
+}
+
+.modal ul li button {
+  padding: 10px 15px;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.modal ul li button:hover {
+  background-color: #3700b3;
+}
+
+.modal button {
+  margin-top: 20px;
+}
 /* Modal and other elements can also be styled similarly */
